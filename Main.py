@@ -33,15 +33,13 @@ with open('CEPS.json', 'w') as outfile: #abertura de arquivo json
     soup = BeautifulSoup(a.text, 'lxml') 
     
     #encontra as tabelas
-    table = soup.find_all('table',{"class":"tmptabela"})
-    
-    #coloca o nome do estado no arquivo jsonl
-    json.dump('[{Estado:' + estado[i] + '}\n', outfile, ensure_ascii=False) 
+    table = soup.find_all('table',{"class":"tmptabela"}) 
     
     ba = {} #dicionário para conter as linhas da tabela
     for line in table[1].find_all('tr'): #encontra tag tr das linhas e mantem no loop enquanto houver linha
         count = 0 #contador para descartar as duas últimas colunas da tabela
         for l in line.findAll('td'): #encontra td, colunas da tabela
+          ba['Estado'] = estado[i] #pega o estado e salva no dicionário para escrevê-lo a cada linha no arquivo jsonl
           if count==0:#coluna 1
             ba['Localidade'] = l.get_text() #pega texto da coluna 1 e salva no dic
             print (l.getText(),'|') #escreve texto na tela
@@ -55,7 +53,6 @@ with open('CEPS.json', 'w') as outfile: #abertura de arquivo json
           count = count + 1 #itera o contador de coluna
     
     i = i + 1 #itera o contador de estados
-    json.dump(']\n', outfile, ensure_ascii=False) #salta linha
-    
+        
     if i == len(estado): # para o programa
       break;
